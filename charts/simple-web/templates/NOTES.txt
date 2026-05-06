@@ -1,0 +1,4 @@
+Simple-web has been deployed.
+
+Run the following to get the public endpoint:
+  kubectl get svc {{ include "simple-web.fullname" . }} -n {{ .Release.Namespace }}
