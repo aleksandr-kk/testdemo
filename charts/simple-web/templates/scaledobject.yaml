@@ -1,0 +1,34 @@
+{{- if .Values.keda.enabled }}
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: {{ include "simple-web.fullname" . }}
+  labels:
+    {{- include "simple-web.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "simple-web.fullname" . }}
+  minReplicaCount: {{ .Values.keda.minReplicas }}
+  maxReplicaCount: {{ .Values.keda.maxReplicas }}
+  triggers:
+    - type: cpu
+      metricType: Utilization
+      metadata:
+        value: "{{ .Values.keda.cpu.targetAverageUtilization }}"
+    - type: memory
+      metricType: Utilization
+      metadata:
+        value: "{{ .Values.keda.memory.targetAverageUtilization }}"
+    - type: cron
+      metadata:
+        timezone: "UTC"
+        schedule: "{{ .Values.keda.schedule.start }}"
+        desiredReplicas: "{{ .Values.keda.minReplicas }}"
+    - type: cron
+      metadata:
+        timezone: "UTC"
+        schedule: "{{ .Values.keda.schedule.end }}"
+        desiredReplicas: "{{ .Values.keda.schedule.offReplicas }}"
+{{- end }}

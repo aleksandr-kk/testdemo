@@ -5,7 +5,9 @@ metadata:
   labels:
     {{- include "simple-web.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{- if .Values.keda.enabled }}
+  replicas: {{ .Values.keda.minReplicas }}
+  {{- else if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:

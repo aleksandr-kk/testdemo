@@ -38,3 +38,25 @@ autoscaling:
 nodeSelector: {}
 tolerations: []
 affinity: {}
+
+keda:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  cpu:
+    targetAverageUtilization: 80
+  memory:
+    targetAverageUtilization: 80
+  schedule:
+    start: "0 8 * * *"
+    end: "1 0 * * *"
+    offReplicas: 0
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  host: ""
+  path: /oleksandr
+  pathType: Prefix
+  tls: []
